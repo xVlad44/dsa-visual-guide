@@ -1,73 +1,46 @@
-# Welcome to your Lovable project
 
-## Project info
+# DSA Visual Guide
 
-**URL**: https://lovable.dev/projects/afb75477-de80-409b-9857-db9073335fab
+A modern, interactive web app for learning Data Structures and Algorithms visually.
 
-## How can I edit this code?
+Live Demo: [https://dsa.vlad.systems/](https://dsa.vlad.systems/)
 
-There are several ways of editing your application.
+## Features
+- Visualize sorting, graph, and backtracking algorithms step-by-step
+- Interactive controls: play, pause, step, and reset
+- Complexity analysis and real-time animations
+- Clean, responsive UI
 
-**Use Lovable**
+## Tech Stack
+- [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/) for fast development
+- Tailwind CSS for styling
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/afb75477-de80-409b-9857-db9073335fab) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+1. **Clone the repo:**
+   ```sh
+   git clone https://github.com/xvlad44/dsa-visual-guide.git
+   cd dsa-visual-guide
+   ```
+2. **Install dependencies:**
+   ```sh
+   bun install
+   # or
+   npm install
+   ```
+3. **Run the app locally:**
+   ```sh
+   bun run dev
+   # or
+   npm run dev
+   ```
+4. **Open** [http://localhost:8080](http://localhost:8080) in your browser.
 
-**Use your preferred IDE**
+## Credits
+- Boilerplate generated with lovable.dev
+- Created by [Vlad](https://vlad.systems/) ([xvlad44](https://github.com/xvlad44))
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/afb75477-de80-409b-9857-db9073335fab) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Feel free to open issues or contribute!
