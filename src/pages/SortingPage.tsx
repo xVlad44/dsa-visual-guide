@@ -1,5 +1,6 @@
-import { BubbleSort } from '../components/algorithms/BubbleSort';
+
+import { SortingAlgorithms } from '../components/algorithms/SortingAlgorithms';
 
 export default function SortingPage() {
-  return <BubbleSort />;
+  return <SortingAlgorithms />;
 }

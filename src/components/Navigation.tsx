@@ -24,6 +24,12 @@ const navigationItems = [
     description: 'Trees, Graphs, Lists'
   },
   {
+    name: 'Graph Algorithms',
+    href: '/graph',
+    icon: GitBranch,
+    description: 'Interactive Graph Editor'
+  },
+  {
     name: 'Recursion',
     href: '/recursion',
     icon: Code,

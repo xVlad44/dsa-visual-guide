@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import SortingPage from "./pages/SortingPage";
 import PathfindingPage from "./pages/PathfindingPage";
 import DataStructuresPage from "./pages/DataStructuresPage";
+import GraphPage from "./pages/GraphPage";
 import RecursionPage from "./pages/RecursionPage";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/sorting" element={<SortingPage />} />
               <Route path="/pathfinding" element={<PathfindingPage />} />
               <Route path="/data-structures" element={<DataStructuresPage />} />
+              <Route path="/graph" element={<GraphPage />} />
               <Route path="/recursion" element={<RecursionPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
