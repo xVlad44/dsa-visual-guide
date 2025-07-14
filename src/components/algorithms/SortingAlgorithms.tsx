@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef } from 'react';
 import { Play, Pause, RotateCcw, SkipForward, SkipBack, Shuffle, Settings, Code2 } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -7,6 +6,9 @@ import { Card } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { ArrayBar, ArrayBarState } from '../ArrayBar';
 import { AlgorithmLayout } from '../AlgorithmLayout';
+import { codeExamples as rawCodeExamples } from '@/lib/data';
+import { CodeBlock, dracula } from 'react-code-blocks';
+
 
 interface SortState {
   array: number[];
@@ -33,96 +35,19 @@ interface SortStep {
   codeLine?: number;
 }
 
-type SortAlgorithm = 'bubble' | 'insertion' | 'selection' | 'merge' | 'quick';
+type SortAlgorithm = 'bubble' | 'insertion' | 'selection' | 'merge' | 'quick' | 'heap' | 'radix' | 'bucket';
 
 const algorithms = {
   bubble: { name: 'Bubble Sort', timeComplexity: 'O(n²)', spaceComplexity: 'O(1)' },
   insertion: { name: 'Insertion Sort', timeComplexity: 'O(n²)', spaceComplexity: 'O(1)' },
   selection: { name: 'Selection Sort', timeComplexity: 'O(n²)', spaceComplexity: 'O(1)' },
   merge: { name: 'Merge Sort', timeComplexity: 'O(n log n)', spaceComplexity: 'O(n)' },
-  quick: { name: 'Quick Sort', timeComplexity: 'O(n log n)', spaceComplexity: 'O(log n)' }
+  quick: { name: 'Quick Sort', timeComplexity: 'O(n log n)', spaceComplexity: 'O(log n)' },
+  heap: { name: 'Heap Sort', timeComplexity: 'O(n log n)', spaceComplexity: 'O(1)' },
+  radix: { name: 'Radix Sort', timeComplexity: 'O(nk)', spaceComplexity: 'O(n + k)' },
+  bucket: { name: 'Bucket Sort', timeComplexity: 'O(n + k)', spaceComplexity: 'O(n + k)' }
 };
 
-const codeExamples = {
-  bubble: [
-    'function bubbleSort(arr) {',
-    '  for (let i = 0; i < arr.length - 1; i++) {',
-    '    for (let j = 0; j < arr.length - i - 1; j++) {',
-    '      if (arr[j] > arr[j + 1]) {',
-    '        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];',
-    '      }',
-    '    }',
-    '  }',
-    '  return arr;',
-    '}'
-  ],
-  insertion: [
-    'function insertionSort(arr) {',
-    '  for (let i = 1; i < arr.length; i++) {',
-    '    let key = arr[i];',
-    '    let j = i - 1;',
-    '    while (j >= 0 && arr[j] > key) {',
-    '      arr[j + 1] = arr[j];',
-    '      j--;',
-    '    }',
-    '    arr[j + 1] = key;',
-    '  }',
-    '  return arr;',
-    '}'
-  ],
-  selection: [
-    'function selectionSort(arr) {',
-    '  for (let i = 0; i < arr.length - 1; i++) {',
-    '    let minIndex = i;',
-    '    for (let j = i + 1; j < arr.length; j++) {',
-    '      if (arr[j] < arr[minIndex]) {',
-    '        minIndex = j;',
-    '      }',
-    '    }',
-    '    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];',
-    '  }',
-    '  return arr;',
-    '}'
-  ],
-  merge: [
-    'function mergeSort(arr) {',
-    '  if (arr.length <= 1) return arr;',
-    '  const mid = Math.floor(arr.length / 2);',
-    '  const left = mergeSort(arr.slice(0, mid));',
-    '  const right = mergeSort(arr.slice(mid));',
-    '  return merge(left, right);',
-    '}',
-    'function merge(left, right) {',
-    '  let result = [], i = 0, j = 0;',
-    '  while (i < left.length && j < right.length) {',
-    '    result.push(left[i] <= right[j] ? left[i++] : right[j++]);',
-    '  }',
-    '  return result.concat(left.slice(i), right.slice(j));',
-    '}'
-  ],
-  quick: [
-    'function quickSort(arr, low = 0, high = arr.length - 1) {',
-    '  if (low < high) {',
-    '    const pi = partition(arr, low, high);',
-    '    quickSort(arr, low, pi - 1);',
-    '    quickSort(arr, pi + 1, high);',
-    '  }',
-    '  return arr;',
-    '}',
-    'function partition(arr, low, high) {',
-    '  const pivot = arr[high];',
-    '  let i = low - 1;',
-    '  for (let j = low; j < high; j++) {',
-    '    if (arr[j] < pivot) {',
-    '      i++;',
-    '      [arr[i], arr[j]] = [arr[j], arr[i]];',
-    '    }',
-    '  }',
-    '  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];',
-    '  return i + 1;',
-    '}'
-  ]
-};
 
 export function SortingAlgorithms() {
   const [algorithm, setAlgorithm] = useState<SortAlgorithm>('bubble');
@@ -183,6 +108,15 @@ export function SortingAlgorithms() {
         break;
       case 'quick':
         generateQuickSortSteps(workingArray, steps);
+        break;
+      case 'heap':
+        generateHeapSortSteps(workingArray, steps);
+        break;
+      case 'radix':
+        generateRadixSortSteps(workingArray, steps);
+        break;
+      case 'bucket':
+        generateBucketSortSteps(workingArray, steps);
         break;
     }
     
@@ -417,6 +351,157 @@ export function SortingAlgorithms() {
     return i + 1;
   };
 
+  const generateHeapSortSteps = (arr: number[], steps: SortStep[]) => {
+    const n = arr.length;
+    
+    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+      heapify(arr, n, i, steps);
+    }
+    
+    for (let i = n - 1; i > 0; i--) {
+      [arr[0], arr[i]] = [arr[i], arr[0]];
+      steps.push({
+        array: [...arr],
+        comparing: [],
+        swapping: [0, i],
+        sorted: Array.from({ length: n - i }, (_, idx) => idx + i),
+        description: `Swapping root with element at index ${i}`,
+        codeLine: 20
+      });
+      heapify(arr, i, 0, steps);
+    }
+    
+    steps.push({
+      array: [...arr],
+      comparing: [],
+      swapping: [],
+      sorted: Array.from({ length: n }, (_, idx) => idx),
+      description: 'Heap sort complete!',
+      codeLine: 22
+    });
+  };
+
+  const heapify = (arr: number[], n: number, i: number, steps: SortStep[]) => {
+    let largest = i;
+    const left = 2 * i + 1;
+    const right = 2 * i + 2;
+    
+    if (left < n && arr[left] > arr[largest]) {
+      largest = left;
+    }
+    
+    if (right < n && arr[right] > arr[largest]) {
+      largest = right;
+    }
+    
+    if (largest !== i) {
+      [arr[i], arr[largest]] = [arr[largest], arr[i]];
+      steps.push({
+        array: [...arr],
+        comparing: [i, largest],
+        swapping: [],
+        sorted: [],
+        description: `Swapping ${arr[i]} with ${arr[largest]}`,
+        codeLine: 26
+      });
+      heapify(arr, n, largest, steps);
+    }
+  };
+  const countingSort = (arr: number[], exp: number, steps: SortStep[]) => {
+    const output = new Array(arr.length);
+    const count = new Array(10).fill(0);
+
+    for (let i = 0; i < arr.length; i++) {
+      const index = Math.floor((arr[i] / exp) % 10);
+      count[index]++;
+    }
+
+    for (let i = 1; i < count.length; i++) {
+      count[i] += count[i - 1];
+    }
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const index = Math.floor((arr[i] / exp) % 10);
+      output[count[index] - 1] = arr[i];
+      count[index]--;
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = output[i];
+    }
+
+    steps.push({
+      array: [...arr],
+      comparing: [],
+      swapping: [],
+      sorted: Array.from({ length: arr.length }, (_, idx) => idx),
+      description: `Counting sort on exp ${exp}`,
+      codeLine: 8
+    });
+  };
+
+  const generateRadixSortSteps = (arr: number[], steps: SortStep[]) => {
+    const max = Math.max(...arr);
+    for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+      countingSort(arr, exp, steps);
+    }
+    
+    steps.push({
+      array: [...arr],
+      comparing: [],
+      swapping: [],
+      sorted: Array.from({ length: arr.length }, (_, idx) => idx),
+      description: 'Radix sort complete!',
+      codeLine: 8
+    });
+  };
+
+  //for bucker sort use simplifed version and display the steps in a manner similar to merge sort
+  const insertionSort = (arr: number[]) => {
+    for (let i = 1; i < arr.length; i++) {
+      const key = arr[i];
+      let j = i - 1;
+      while (j >= 0 && arr[j] > key) {
+        arr[j + 1] = arr[j];
+        j--;
+      }
+      arr[j + 1] = key;
+    }
+  };
+  const generateBucketSortSteps = (arr: number[], steps: SortStep[]) => {
+    const buckets: number[][] = Array.from({ length: 10 }, () => []);
+    
+    for (const num of arr) {
+      const bucketIndex = Math.floor(num / 10);
+      buckets[bucketIndex].push(num);
+    }
+    
+    for (let i = 0; i < buckets.length; i++) {
+      if (buckets[i].length > 0) {
+        insertionSort(buckets[i]);
+        steps.push({
+          array: [...arr],
+          comparing: [],
+          swapping: [],
+          sorted: Array.from({ length: arr.length }, (_, idx) => idx),
+          description: `Sorting bucket ${i}`,
+          codeLine: 8
+        });
+      }
+    }
+    
+    const sortedArray = [].concat(...buckets);
+    steps.push({
+      array: sortedArray,
+      comparing: [],
+      swapping: [],
+      sorted: Array.from({ length: sortedArray.length }, (_, idx) => idx),
+      description: 'Bucket sort complete!',
+      codeLine: 8
+    });
+  };
+
+
   const nextStep = useCallback(() => {
     setState(prev => {
       if (prev.currentStep >= prev.steps.length - 1) {
@@ -495,16 +580,24 @@ export function SortingAlgorithms() {
   }
 
   const controls = (
-    <div className="flex flex-wrap items-center gap-4">
-      <Tabs value={algorithm} onValueChange={(value) => setAlgorithm(value as SortAlgorithm)}>
+    <div className="flex flex-col items-center gap-4">
+      <Tabs 
+      className='gap-5'
+      value={algorithm} 
+      onValueChange={(value) => setAlgorithm(value as SortAlgorithm)}>
         <TabsList>
           <TabsTrigger value="bubble">Bubble</TabsTrigger>
           <TabsTrigger value="insertion">Insertion</TabsTrigger>
           <TabsTrigger value="selection">Selection</TabsTrigger>
           <TabsTrigger value="merge">Merge</TabsTrigger>
           <TabsTrigger value="quick">Quick</TabsTrigger>
+          <TabsTrigger value="heap">Heap</TabsTrigger>
+          <TabsTrigger value="radix">Radix</TabsTrigger>
+          <TabsTrigger value="bucket">Bucket</TabsTrigger>
         </TabsList>
       </Tabs>
+
+    <div className="flex flex-wrap items-center gap-4">
 
       <div className="flex items-center gap-2">
         <Button
@@ -549,6 +642,7 @@ export function SortingAlgorithms() {
         <Button
           onClick={() => setShowCode(!showCode)}
           variant="outline"
+          className={`${showCode ? 'bg-primary text-primary-foreground' : ''}`}
         >
           <Code2 className="h-4 w-4" />
           Code
@@ -583,6 +677,7 @@ export function SortingAlgorithms() {
         </div>
       </div>
     </div>
+    </div>
   );
 
   const sidebar = (
@@ -614,7 +709,7 @@ export function SortingAlgorithms() {
         </div>
       )}
 
-      {showCode && (
+      {/* {showCode && (
         <div>
           <h4 className="font-medium mb-2">Code</h4>
           <Card className="p-3 bg-muted">
@@ -634,7 +729,7 @@ export function SortingAlgorithms() {
             </pre>
           </Card>
         </div>
-      )}
+      )} */}
 
       <div>
         <h3 className="text-lg font-semibold mb-3">Color Legend</h3>
@@ -674,6 +769,31 @@ export function SortingAlgorithms() {
       )}
     </div>
   );
+  type CodeExamples = {
+    [key: string]: React.ReactNode;
+  };
+  // Convert string arrays to React components
+  const getCodeExamples = (algorithm: SortAlgorithm): CodeExamples => {
+    const algorithmCode = rawCodeExamples[algorithm];
+    if (!algorithmCode) return {};
+
+    const codeExamples: CodeExamples = {};
+    
+    Object.entries(algorithmCode).forEach(([language, lines]) => {
+      codeExamples[language] = (
+        <pre className="text-xs overflow-x-auto">
+          <CodeBlock
+            text={lines.join('\n')}
+            language={language}
+            showLineNumbers
+            theme={dracula}
+          />
+        </pre>
+      );
+    });
+
+    return codeExamples;
+  };
 
   return (
     <AlgorithmLayout
@@ -681,6 +801,7 @@ export function SortingAlgorithms() {
       description="Compare and learn different sorting algorithms with step-by-step visualizations"
       controls={controls}
       sidebar={sidebar}
+      codeExamples={showCode ? getCodeExamples(algorithm) : {}}
     >
       <div className="flex items-end justify-center space-x-2 min-h-[350px]">
         {state.array.map((value, index) => (
