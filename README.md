@@ -43,4 +43,6 @@ Live Demo: [https://dsa.vlad.systems/](https://dsa.vlad.systems/)
 
 ---
 
-Feel free to open issues or contribute!
+This project is open source and community contributions are very welcome!
+
+If you have ideas, suggestions, or want to help improve the project, feel free to open issues or submit pull requests. Let's make learning DSA easier together!
