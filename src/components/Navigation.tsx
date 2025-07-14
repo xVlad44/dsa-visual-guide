@@ -12,12 +12,6 @@ const navigationItems = [
     description: 'Bubble, Merge, Quick Sort'
   },
   {
-    name: 'Pathfinding', 
-    href: '/pathfinding',
-    icon: GitBranch,
-    description: 'BFS, DFS, A*, Dijkstra'
-  },
-  {
     name: 'Data Structures',
     href: '/data-structures', 
     icon: Grid3x3,

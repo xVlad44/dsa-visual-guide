@@ -13,9 +13,9 @@ const features = [
   },
   {
     icon: GitBranch,
-    title: 'Pathfinding',
-    description: 'Explore BFS, DFS, A*, and Dijkstra algorithms through interactive grid visualizations.',
-    href: '/pathfinding',
+    title: 'Graph Algorithms',
+    description: 'Explore BFS, DFS and Dijkstra algorithms through interactive grid visualizations.',
+    href: '/graph',
     color: 'text-green-500'
   },
   {
@@ -168,6 +168,19 @@ export default function HomePage() {
           </Button>
         </Card>
       </section>
+    {/* Footer */}
+    <footer className="w-full py-8 bg-background border-t mt-12">
+      <div className="container mx-auto px-4 text-center text-muted-foreground text-sm flex flex-col items-center gap-2">
+        <span>
+          Created by <span className="font-semibold text-primary">Vlad</span>
+        </span>
+        <div className="flex gap-4 justify-center">
+          <a href="https://github.com/xvlad44" target="_blank" rel="noopener noreferrer" className="hover:underline text-primary">GitHub</a>
+          <span className="opacity-50">|</span>
+          <a href="https://vlad.systems" target="_blank" rel="noopener noreferrer" className="hover:underline text-primary">Portfolio</a>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 }
