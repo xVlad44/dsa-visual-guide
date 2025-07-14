@@ -27,6 +27,7 @@ export function AlgorithmLayout({
   codeExamples,
   className
 }: AlgorithmLayoutProps) {
+  console.log(codeExamples)
   return (
     <div className={cn("container mx-auto px-4 py-8", className)}>
       {/* Header */}
@@ -56,7 +57,9 @@ export function AlgorithmLayout({
 
         
         {/* Code Example */}
-        <div className="lg:col-span-1">
+        {
+          codeExamples && (
+                 <div className="lg:col-span-1">
           <Card className="p-6 bg-gradient-card shadow-medium sticky top-24">
             <Tabs defaultValue="javascript" className="w-full">
               <TabsList className="justify-start mb-4">
@@ -74,6 +77,8 @@ export function AlgorithmLayout({
             </Tabs>
           </Card>
         </div>
+          )}
+
         </div>
 
         {/* Sidebar */}

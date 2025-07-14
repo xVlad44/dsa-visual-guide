@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Plus, Minus, Play, RotateCcw, ArrowRight, ArrowDown } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -6,6 +5,7 @@ import { Input } from '../ui/input';
 import { Card } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { AlgorithmLayout } from '../AlgorithmLayout';
+import { useTheme } from '../ThemeProvider';
 
 interface StackNode {
   value: number;
@@ -55,6 +55,10 @@ export function DataStructures() {
   const [treeRoot, setTreeRoot] = useState<string | null>(null);
   const [traversalResult, setTraversalResult] = useState<number[]>([]);
   const [highlightedNodes, setHighlightedNodes] = useState<string[]>([]);
+  const [draggedNodeId, setDraggedNodeId] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const { theme } = useTheme();
 
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -162,11 +166,12 @@ export function DataStructures() {
   // Binary Tree operations
   const insertIntoTree = useCallback(() => {
     if (!inputValue) return;
-    
+
     const value = parseInt(inputValue);
     const newId = generateId();
-    
+
     if (!treeRoot) {
+      // First node
       const newNode: TreeNode = {
         value,
         id: newId,
@@ -176,11 +181,14 @@ export function DataStructures() {
       setTreeNodes({ [newId]: newNode });
       setTreeRoot(newId);
     } else {
-      // BST insertion
-      const insertNode = (nodeId: string, depth: number = 1): string => {
-        const node = treeNodes[nodeId];
+      // Use a local copy for recursion
+      const updatedNodes = { ...treeNodes };
+      let inserted = false;
+
+      function insertNode(nodeId: string, depth: number = 1, x: number, y: number): void {
+        const node = updatedNodes[nodeId];
         const offsetX = 200 / Math.pow(2, depth - 1);
-        
+
         if (value < node.value) {
           if (!node.left) {
             const newNode: TreeNode = {
@@ -189,14 +197,11 @@ export function DataStructures() {
               x: node.x - offsetX,
               y: node.y + 80
             };
-            setTreeNodes(prev => ({
-              ...prev,
-              [nodeId]: { ...node, left: newId },
-              [newId]: newNode
-            }));
-            return newId;
+            node.left = newId;
+            updatedNodes[newId] = newNode;
+            inserted = true;
           } else {
-            return insertNode(node.left, depth + 1);
+            insertNode(node.left, depth + 1, node.x - offsetX, node.y + 80);
           }
         } else {
           if (!node.right) {
@@ -206,23 +211,24 @@ export function DataStructures() {
               x: node.x + offsetX,
               y: node.y + 80
             };
-            setTreeNodes(prev => ({
-              ...prev,
-              [nodeId]: { ...node, right: newId },
-              [newId]: newNode
-            }));
-            return newId;
+            node.right = newId;
+            updatedNodes[newId] = newNode;
+            inserted = true;
           } else {
-            return insertNode(node.right, depth + 1);
+            insertNode(node.right, depth + 1, node.x + offsetX, node.y + 80);
           }
         }
-      };
-      
-      insertNode(treeRoot);
+      }
+
+      insertNode(treeRoot, 1, updatedNodes[treeRoot].x, updatedNodes[treeRoot].y);
+
+      if (inserted) {
+        setTreeNodes(updatedNodes);
+      }
     }
-    
+
     setInputValue('');
-  }, [inputValue, treeRoot, treeNodes]);
+  }, [inputValue, treeRoot, treeNodes, generateId]);
 
   const traverseTree = useCallback((type: TreeTraversal) => {
     if (!treeRoot) return;
@@ -352,75 +358,120 @@ export function DataStructures() {
     );
   };
 
-  const renderBinaryTree = () => (
-    <div className="relative min-h-[400px] w-full">
-      <div className="text-sm font-medium text-center mb-4">Binary Search Tree</div>
-      <svg className="w-full h-full">
-        {/* Render edges */}
-        {Object.values(treeNodes).map(node => (
-          <g key={`edges-${node.id}`}>
-            {node.left && (
-              <line
-                x1={node.x}
-                y1={node.y}
-                x2={treeNodes[node.left].x}
-                y2={treeNodes[node.left].y}
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-muted-foreground"
+  const CANVAS_WIDTH = 1200;
+const CANVAS_HEIGHT = 600;
+const NODE_RADIUS = 24;
+const LEVEL_HEIGHT = 90;
+
+function computeTreeLayout(rootId: string | null, nodes: Record<string, TreeNode>) {
+  // Simple BFS layout: assign x based on index at each level
+  if (!rootId) return {};
+  const positions: Record<string, { x: number; y: number }> = {};
+  const queue: Array<{ id: string; depth: number; index: number; siblings: number }> = [];
+  queue.push({ id: rootId, depth: 0, index: 0, siblings: 1 });
+
+  while (queue.length) {
+    const { id, depth, index, siblings } = queue.shift()!;
+    const y = LEVEL_HEIGHT + depth * LEVEL_HEIGHT;
+    const x = ((index + 1) * CANVAS_WIDTH) / (siblings + 1);
+
+    positions[id] = { x, y };
+
+    const node = nodes[id];
+    let childCount = 0;
+    if (node.left) childCount++;
+    if (node.right) childCount++;
+
+    if (node.left) queue.push({ id: node.left, depth: depth + 1, index: index * 2, siblings: siblings * 2 });
+    if (node.right) queue.push({ id: node.right, depth: depth + 1, index: index * 2 + 1, siblings: siblings * 2 });
+  }
+  return positions;
+}
+
+  const renderBinaryTree = () => {
+    // Choose background color based on theme
+    const canvasBg = theme === 'dark' ? '#18181b' : '#f9f9f9';
+
+    return (
+      <div
+        className="relative w-full overflow-auto"
+        style={{ minHeight: CANVAS_HEIGHT }}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        <svg
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          viewBox={`0 0 ${CANVAS_WIDTH} ${CANVAS_HEIGHT}`}
+          style={{ background: canvasBg, borderRadius: 8 }}
+        >
+          {/* Edges */}
+          {Object.values(treeNodes).map(node => (
+            <g key={`edges-${node.id}`}>
+              {node.left && treeNodes[node.left] && (
+                <line
+                  x1={node.x}
+                  y1={node.y}
+                  x2={treeNodes[node.left].x}
+                  y2={treeNodes[node.left].y}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="text-muted-foreground"
+                />
+              )}
+              {node.right && treeNodes[node.right] && (
+                <line
+                  x1={node.x}
+                  y1={node.y}
+                  x2={treeNodes[node.right].x}
+                  y2={treeNodes[node.right].y}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="text-muted-foreground"
+                />
+              )}
+            </g>
+          ))}
+          {/* Nodes */}
+          {Object.values(treeNodes).map(node => (
+            <g key={node.id}>
+              <circle
+                cx={node.x}
+                cy={node.y}
+                r={NODE_RADIUS}
+                className={`${
+                  highlightedNodes.includes(node.id)
+                    ? 'fill-primary stroke-primary-glow'
+                    : 'fill-background stroke-primary'
+                } stroke-2 transition-all duration-300 cursor-pointer`}
+                onMouseDown={e => handleMouseDown(e, node.id)}
               />
-            )}
-            {node.right && (
-              <line
-                x1={node.x}
-                y1={node.y}
-                x2={treeNodes[node.right].x}
-                y2={treeNodes[node.right].y}
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-muted-foreground"
-              />
-            )}
-          </g>
-        ))}
-        
-        {/* Render nodes */}
-        {Object.values(treeNodes).map(node => (
-          <g key={node.id}>
-            <circle
-              cx={node.x}
-              cy={node.y}
-              r="20"
-              className={`${
-                highlightedNodes.includes(node.id)
-                  ? 'fill-primary stroke-primary-glow'
-                  : 'fill-background stroke-primary'
-              } stroke-2 transition-all duration-300`}
-            />
-            <text
-              x={node.x}
-              y={node.y + 5}
-              textAnchor="middle"
-              className={`text-sm font-bold ${
-                highlightedNodes.includes(node.id) ? 'fill-primary-foreground' : 'fill-foreground'
-              }`}
-            >
-              {node.value}
-            </text>
-          </g>
-        ))}
-      </svg>
-      
-      {traversalResult.length > 0 && (
-        <div className="mt-4 text-center">
-          <div className="text-sm font-medium mb-2">Traversal Result:</div>
-          <div className="text-lg font-mono">
-            [{traversalResult.join(', ')}]
+              <text
+                x={node.x}
+                y={node.y + 5}
+                textAnchor="middle"
+                className={`text-sm font-bold ${
+                  highlightedNodes.includes(node.id) ? 'fill-primary-foreground' : 'fill-foreground'
+                }`}
+                pointerEvents="none"
+              >
+                {node.value}
+              </text>
+            </g>
+          ))}
+        </svg>
+        {traversalResult.length > 0 && (
+          <div className="mt-4 text-center">
+            <div className="text-sm font-medium mb-2">Traversal Result:</div>
+            <div className="text-lg font-mono">
+              [{traversalResult.join(', ')}]
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );
+  };
 
   const getControls = () => {
     const commonControls = (
@@ -647,7 +698,7 @@ export function DataStructures() {
           <TabsTrigger value="stack">Stack</TabsTrigger>
           <TabsTrigger value="queue">Queue</TabsTrigger>
           <TabsTrigger value="list">Linked List</TabsTrigger>
-          <TabsTrigger value="tree">Binary Tree</TabsTrigger>
+          <TabsTrigger value="tree">Binary Search Tree</TabsTrigger>
         </TabsList>
       </Tabs>
       {getControls()}
@@ -669,12 +720,42 @@ export function DataStructures() {
     }
   };
 
+  // Mouse event handlers for dragging
+  const handleMouseDown = (e: React.MouseEvent, nodeId: string) => {
+    e.stopPropagation();
+    const node = treeNodes[nodeId];
+    setDraggedNodeId(nodeId);
+    setDragOffset({
+      x: e.clientX - node.x,
+      y: e.clientY - node.y,
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!draggedNodeId) return;
+    const newX = e.clientX - dragOffset.x;
+    const newY = e.clientY - dragOffset.y;
+    setTreeNodes(prev => ({
+      ...prev,
+      [draggedNodeId]: {
+        ...prev[draggedNodeId],
+        x: newX,
+        y: newY,
+      },
+    }));
+  };
+
+  const handleMouseUp = () => {
+    setDraggedNodeId(null);
+  };
+
   return (
     <AlgorithmLayout
       title="Data Structures Visualizer"
       description="Learn and interact with fundamental data structures through visual demonstrations"
       controls={controls}
       sidebar={getSidebar()}
+      codeExamples={null}
     >
       <div className="flex items-center justify-center min-h-[400px] p-4">
         {renderCurrentStructure()}
