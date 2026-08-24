@@ -39,7 +39,7 @@ Live Demo: [https://dsa.xvlad.me](https://dsa.xvlad.me)
 
 ## Credits
 - Boilerplate generated with lovable.dev
-- Created by [Vlad](https://vlad.systems/) ([xvlad44](https://github.com/xvlad44))
+- Created by [Vlad](https://xvlad.me) ([xvlad44](https://github.com/xvlad44))
 
 ---
 
