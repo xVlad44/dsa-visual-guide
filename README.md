@@ -3,7 +3,7 @@
 
 A modern, interactive web app for learning Data Structures and Algorithms visually.
 
-Live Demo: [https://dsa.vlad.systems/](https://dsa.vlad.systems/)
+Live Demo: [https://dsa.xvlad.me](https://dsa.xvlad.me)
 
 ## Features
 - Visualize sorting, graph, and backtracking algorithms step-by-step
