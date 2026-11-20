@@ -1,10 +1,9 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "./components/ThemeProvider";
-import { Navigation } from "./components/Navigation";
+import { SiteHeader } from "./components/layout/SiteHeader";
+import { SiteFooter } from "./components/layout/SiteFooter";
 import HomePage from "./pages/HomePage";
 import SortingPage from "./pages/SortingPage";
 import PathfindingPage from "./pages/PathfindingPage";
@@ -13,17 +12,14 @@ import GraphPage from "./pages/GraphPage";
 import RecursionPage from "./pages/RecursionPage";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <ThemeProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="min-h-screen bg-background">
-            <Navigation />
+  <TooltipProvider>
+    <ThemeProvider>
+      <Toaster />
+      <BrowserRouter>
+        <div className="flex min-h-screen flex-col bg-background">
+          <SiteHeader />
+          <main id="main" className="flex-1">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/sorting" element={<SortingPage />} />
@@ -33,11 +29,12 @@ const App = () => (
               <Route path="/recursion" element={<RecursionPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
-        </BrowserRouter>
-      </ThemeProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+          </main>
+          <SiteFooter />
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
+  </TooltipProvider>
 );
 
 export default App;
