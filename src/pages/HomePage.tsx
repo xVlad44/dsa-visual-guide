@@ -72,7 +72,7 @@ export default function HomePage() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" variant="gradient" asChild>
+            <Button size="lg" variant="default" asChild>
               <Link to="/sorting">
                 Start Learning
                 <ArrowRight className="ml-2 h-5 w-5" />

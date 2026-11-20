@@ -476,7 +476,7 @@ export function GraphAlgorithms() {
         <Button
           onClick={isPlaying ? pauseAlgorithm : playAlgorithm}
           disabled={steps.length === 0 || currentStep >= steps.length - 1}
-          variant="gradient"
+          variant="default"
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           {isPlaying ? 'Pause' : 'Play'}
@@ -500,7 +500,7 @@ export function GraphAlgorithms() {
           <SkipForward className="h-4 w-4" />
         </Button>
         
-        <Button onClick={runAlgorithm} disabled={!startNode} variant="accent">
+        <Button onClick={runAlgorithm} disabled={!startNode} variant="secondary">
           Run Algorithm
         </Button>
         

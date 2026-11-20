@@ -16,7 +16,7 @@ export default function PathfindingPage() {
           BFS, DFS, A*, and Dijkstra algorithms that will help you understand how they navigate through grids and graphs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button variant="gradient" asChild>
+          <Button variant="default" asChild>
             <Link to="/sorting">
               Try Bubble Sort
               <ArrowRight className="ml-2 h-4 w-4" />

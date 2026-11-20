@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Learn DSA Visually - Interactive Algorithm Learning</title>
-    <meta name="description" content="Master Data Structures and Algorithms through interactive visualizations. Learn sorting, pathfinding, recursion, and data structures with step-by-step animations." />
-    <meta name="author" content="Learn DSA Visually" />
+    <title>DSA Visual Guide · step-by-step algorithm traces</title>
+    <meta name="description" content="Sorting, graph, backtracking and data-structure algorithms replayed step by step from a tested TypeScript trace engine, with live operation counters and highlighted pseudocode." />
+    <meta name="author" content="Vlad Plastin" />
+    <meta name="theme-color" content="#0A0F1E" />
 
-    <meta property="og:title" content="Learn DSA Visually - Interactive Algorithm Learning" />
-    <meta property="og:description" content="Master Data Structures and Algorithms through interactive visualizations and step-by-step explanations." />
+    <meta property="og:title" content="DSA Visual Guide" />
+    <meta property="og:description" content="Algorithms replayed step by step from a tested trace engine, with live operation counters and highlighted pseudocode." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://dsa.xvlad.dev" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <!-- Apply the saved (or system) theme before first paint to avoid a flash. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('dsa-theme');
+          var theme = saved === 'light' || saved === 'dark'
+            ? saved
+            : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          document.documentElement.classList.remove('light', 'dark');
+          document.documentElement.classList.add(theme);
+        } catch (e) { /* storage blocked: keep the dark default */ }
+      })();
+    </script>
   </head>
 
   <body>

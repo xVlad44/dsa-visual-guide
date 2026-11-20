@@ -603,7 +603,7 @@ export function SortingAlgorithms() {
         <Button
           onClick={isPlaying ? pauseSorting : startSorting}
           disabled={state.isComplete}
-          variant="gradient"
+          variant="default"
           size="lg"
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}

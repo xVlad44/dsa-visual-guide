@@ -2,161 +2,100 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Educational DSA App Design System - All colors MUST be HSL */
-
+/*
+ * Design tokens. "Observatory" palette shared with xvlad.dev: deep navy ground,
+ * one warm gold accent, monospace for labels and numbers.
+ * All colours are HSL triplets so Tailwind can apply alpha (hsl(var(--x) / .5)).
+ * Dark is the primary theme; light keeps the same structure on a cool paper ground.
+ */
 @layer base {
   :root {
-    /* Base colors */
-    --background: 240 25% 98%;
-    --foreground: 240 15% 15%;
-
-    /* Card components */
+    --background: 220 23% 97%;      /* #F6F7F9 */
+    --foreground: 225 50% 8%;       /* #0A0F1E */
     --card: 0 0% 100%;
-    --card-foreground: 240 15% 15%;
-
-    /* Popover components */
+    --card-foreground: 225 50% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 15% 15%;
+    --popover-foreground: 225 50% 8%;
 
-    /* Primary brand colors - Deep educational blue */
-    --primary: 245 60% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 245 70% 65%;
+    /* gold fill (buttons, active states) with navy text on top */
+    --primary: 39 75% 64%;          /* #E8B85D */
+    --primary-foreground: 225 50% 8%;
+    /* gold used as text/lines on the page ground: darker in light for AA */
+    --ink: 39 100% 27%;             /* #8A5A00, 5.9:1 on white */
 
-    /* Secondary colors - Lighter blue-gray */
-    --secondary: 240 15% 95%;
-    --secondary-foreground: 240 15% 25%;
+    --secondary: 220 20% 93%;
+    --secondary-foreground: 225 30% 18%;
+    --muted: 220 20% 94%;
+    --muted-foreground: 222 16% 35%; /* #4B5468, 7.6:1 on white */
+    --accent: 220 22% 92%;          /* hover surface */
+    --accent-foreground: 225 50% 8%;
 
-    /* Muted elements */
-    --muted: 240 10% 96%;
-    --muted-foreground: 240 8% 50%;
-
-    /* Accent - Bright cyan for highlights */
-    --accent: 180 85% 55%;
-    --accent-foreground: 0 0% 100%;
-
-    /* Algorithm state colors */
-    --success: 145 65% 45%;
+    --success: 165 64% 34%;
     --success-foreground: 0 0% 100%;
-    --warning: 35 85% 55%;
+    --warning: 39 89% 38%;
     --warning-foreground: 0 0% 100%;
-    --destructive: 0 75% 55%;
+    --destructive: 6 66% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Algorithm visualization colors */
-    --algo-default: 240 15% 85%;
-    --algo-comparing: 35 85% 65%;
-    --algo-swapping: 0 75% 65%;
-    --algo-sorted: 145 65% 60%;
-    --algo-active: 245 70% 65%;
+    /* visualisation states; each is >= 3:1 against the card surface */
+    --algo-default: 220 16% 59%;    /* #8792A8 */
+    --algo-comparing: 39 89% 38%;   /* #B97D0B */
+    --algo-swapping: 6 66% 52%;     /* #D64533 */
+    --algo-sorted: 165 64% 34%;     /* #1F8F72 */
+    --algo-active: 216 63% 50%;     /* #2F6FD0 */
 
-    /* Borders and inputs */
-    --border: 240 15% 88%;
-    --input: 240 15% 92%;
-    --ring: 245 60% 45%;
+    --border: 220 18% 88%;
+    --input: 220 18% 84%;
+    --ring: 39 100% 27%;
 
-    /* Design system gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(180 85% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(240 25% 99%) 100%);
+    --grid-line: 222 30% 50% / 0.08;
 
-    /* Shadows */
-    --shadow-soft: 0 4px 16px hsl(var(--primary) / 0.1);
-    --shadow-medium: 0 8px 32px hsl(var(--primary) / 0.15);
-    --shadow-glow: 0 0 32px hsl(var(--accent) / 0.3);
+    --radius: 0.625rem;
+    --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    color-scheme: light;
   }
 
   .dark {
-    /* Dark mode base colors */
-    --background: 240 15% 8%;
-    --foreground: 240 10% 95%;
+    --background: 225 50% 8%;       /* #0A0F1E */
+    --foreground: 218 33% 95%;      /* #EEF1F6 */
+    --card: 222 43% 11%;            /* #101728 */
+    --card-foreground: 218 33% 95%;
+    --popover: 222 43% 11%;
+    --popover-foreground: 218 33% 95%;
 
-    /* Dark mode cards */
-    --card: 240 15% 12%;
-    --card-foreground: 240 10% 95%;
+    --primary: 39 75% 64%;
+    --primary-foreground: 225 50% 8%;
+    --ink: 39 75% 64%;
 
-    /* Dark mode popovers */
-    --popover: 240 15% 12%;
-    --popover-foreground: 240 10% 95%;
+    --secondary: 222 32% 16%;
+    --secondary-foreground: 218 33% 90%;
+    --muted: 222 34% 14%;
+    --muted-foreground: 221 13% 60%; /* #8A93A6, 5.6:1 on card */
+    --accent: 222 32% 17%;
+    --accent-foreground: 218 33% 95%;
 
-    /* Dark mode primary - Brighter blue */
-    --primary: 245 70% 65%;
-    --primary-foreground: 240 15% 8%;
-    --primary-glow: 245 80% 75%;
+    --success: 165 51% 50%;
+    --success-foreground: 225 50% 8%;
+    --warning: 39 75% 64%;
+    --warning-foreground: 225 50% 8%;
+    --destructive: 6 100% 71%;
+    --destructive-foreground: 225 50% 8%;
 
-    /* Dark mode secondary */
-    --secondary: 240 15% 18%;
-    --secondary-foreground: 240 10% 85%;
+    --algo-default: 222 19% 44%;    /* #5B6886 */
+    --algo-comparing: 39 75% 64%;   /* #E8B85D */
+    --algo-swapping: 6 100% 71%;    /* #FF7A6B */
+    --algo-sorted: 165 51% 50%;     /* #3FBF9F */
+    --algo-active: 212 100% 74%;    /* #7AB8FF */
 
-    /* Dark mode muted */
-    --muted: 240 15% 15%;
-    --muted-foreground: 240 8% 65%;
+    --border: 222 30% 18%;
+    --input: 222 28% 24%;
+    --ring: 39 75% 64%;
 
-    /* Dark mode accent - Bright cyan */
-    --accent: 180 85% 60%;
-    --accent-foreground: 240 15% 8%;
+    --grid-line: 218 33% 95% / 0.045;
 
-    /* Dark mode algorithm states */
-    --success: 145 65% 55%;
-    --success-foreground: 240 15% 8%;
-    --warning: 35 85% 65%;
-    --warning-foreground: 240 15% 8%;
-    --destructive: 0 75% 65%;
-    --destructive-foreground: 240 15% 8%;
-
-    /* Dark mode algorithm visualization */
-    --algo-default: 240 15% 25%;
-    --algo-comparing: 35 85% 55%;
-    --algo-swapping: 0 75% 55%;
-    --algo-sorted: 145 65% 50%;
-    --algo-active: 245 70% 60%;
-
-    /* Dark mode borders and inputs */
-    --border: 240 15% 20%;
-    --input: 240 15% 18%;
-    --ring: 245 70% 65%;
-
-    /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(180 85% 70%));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(240 15% 12%) 0%, hsl(240 15% 15%) 100%);
-
-    /* Dark mode shadows */
-    --shadow-soft: 0 4px 16px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 8px 32px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 32px hsl(var(--accent) / 0.2);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    color-scheme: dark;
   }
 }
 
@@ -165,36 +104,65 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  input[type="number"] {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-@layer utilities {
-  /* Additional animations for algorithm visualizations */
-  .animate-bounce-subtle {
-    animation: bounce-subtle 0.6s ease-in-out infinite;
+@layer components {
+  /* small uppercase monospace label, the portfolio's "eyebrow" */
+  .eyebrow {
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground;
   }
-  
-  .animate-pulse-glow {
-    animation: pulse-glow 1s ease-in-out infinite;
+
+  .kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1 font-mono text-[11px] text-muted-foreground;
   }
-  
-  @keyframes bounce-subtle {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-5px);
-    }
+
+  /* faint measurement grid behind visualisation stages */
+  .stage-grid {
+    background-image:
+      linear-gradient(hsl(var(--grid-line)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--grid-line)) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
   }
-  
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 5px hsl(var(--primary) / 0.5);
-    }
-    50% {
-      box-shadow: 0 0 20px hsl(var(--primary) / 0.8);
-    }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
