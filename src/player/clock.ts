@@ -17,10 +17,11 @@ export function advance(index: number, carry: number, dtMs: number, stepsPerSeco
   if (index >= lastIndex) return { index: lastIndex, carry: 0, ended: true };
   const dt = Math.min(Math.max(dtMs, 0), MAX_FRAME_MS);
   const total = carry + (dt * stepsPerSecond) / 1000;
-  const steps = Math.floor(total);
+  // the epsilon absorbs float drift, e.g. 60 × (1/60) summing to 0.9999…
+  const steps = Math.floor(total + 1e-9);
   const next = Math.min(lastIndex, index + steps);
   const ended = next >= lastIndex;
-  return { index: next, carry: ended ? 0 : total - steps, ended };
+  return { index: next, carry: ended ? 0 : Math.max(0, total - steps), ended };
 }
 
 /** Speed presets in steps per second, used by every visualiser. */
