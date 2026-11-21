@@ -222,33 +222,34 @@
 }
 
 /* React Flow chrome in the app's tokens (both themes) */
-.react-flow__controls {
+/* scoped under .react-flow so these win over reactflow/dist/style.css, which loads later with the lazy graph chunk */
+.react-flow .react-flow__controls {
   box-shadow: none;
   border: 1px solid hsl(var(--border));
   border-radius: 6px;
   overflow: hidden;
 }
-.react-flow__controls-button {
+.react-flow .react-flow__controls-button {
   width: 32px;
   height: 32px;
   background: hsl(var(--card));
   border-bottom: 1px solid hsl(var(--border));
   fill: hsl(var(--muted-foreground));
 }
-.react-flow__controls-button:hover {
+.react-flow .react-flow__controls-button:hover {
   background: hsl(var(--accent));
 }
-.react-flow__controls-button svg {
+.react-flow .react-flow__controls-button svg {
   fill: hsl(var(--foreground));
 }
-.react-flow__attribution {
+.react-flow .react-flow__attribution {
   background: transparent;
   font-family: var(--font-mono);
   font-size: 10px;
 }
-.react-flow__attribution a {
+.react-flow .react-flow__attribution a {
   color: hsl(var(--muted-foreground));
 }
-.react-flow__edge-textbg {
+.react-flow .react-flow__edge-textbg {
   rx: 3;
 }
