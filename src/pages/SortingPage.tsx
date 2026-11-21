@@ -8,6 +8,7 @@ import { BarsView } from '@/components/viz/BarsView';
 import { CANVAS_THRESHOLD } from '@/components/viz/bars';
 import { Chips } from '@/components/viz/Chips';
 import { Legend, ShortcutHint } from '@/components/viz/Legend';
+import { OpsChart } from '@/components/viz/OpsChart';
 import { Panel } from '@/components/viz/Panel';
 import { Pseudocode } from '@/components/viz/Pseudocode';
 import { ComplexityTable, Stat, StatGrid } from '@/components/viz/Stat';
@@ -124,6 +125,9 @@ export default function SortingPage() {
               <span className="font-mono text-foreground">{fmt(total.writes)}</span> writes over{' '}
               <span className="font-mono text-foreground">{fmt(trace.events.length)}</span> events.
             </p>
+          </Panel>
+          <Panel title="Operations vs n">
+            <OpsChart algo={algo} kind={kind} seed={seed} />
           </Panel>
         </aside>
 

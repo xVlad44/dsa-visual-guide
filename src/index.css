@@ -50,6 +50,10 @@
 
     --grid-line: 222 30% 50% / 0.08;
 
+    /* chart series, validated with the dataviz palette checks per mode */
+    --chart-1: 39 100% 27%;         /* #8A5A00 measured */
+    --chart-2: 216 63% 50%;         /* #2F6FD0 model */
+
     --radius: 0.625rem;
     --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
     --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -94,6 +98,9 @@
     --ring: 39 75% 64%;
 
     --grid-line: 218 33% 95% / 0.045;
+
+    --chart-1: 37 65% 45%;          /* #BC8428 */
+    --chart-2: 207 59% 57%;         /* #4F96D2 */
 
     color-scheme: dark;
   }
