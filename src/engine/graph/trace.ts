@@ -106,7 +106,7 @@ export function recordGraph(algorithm: GraphAlgorithmId, graph: Graph, start: st
   return { algorithm, start, events, frames, order: last.visited, distances: last.distances };
 }
 
-export function describeGraphEvent(e: GraphEvent | null, label: (id: string) => string, frontierName: string): string {
+export function describeGraphEvent(e: GraphEvent | null, label: (id: string) => string, frontierName: string, visitVerb = 'Visit'): string {
   if (!e) return 'Ready. Press play or step forward.';
   switch (e.type) {
     case 'push':
@@ -118,7 +118,7 @@ export function describeGraphEvent(e: GraphEvent | null, label: (id: string) => 
     case 'stale':
       return `${label(e.node)} is already settled: skip the stale entry`;
     case 'visit':
-      return `Visit ${label(e.node)}`;
+      return `${visitVerb} ${label(e.node)}`;
     case 'inspect':
       return `Look at neighbour ${label(e.node)}`;
     case 'relax':
