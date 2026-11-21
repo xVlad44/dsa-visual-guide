@@ -25,17 +25,19 @@ interface BarsViewProps {
   /** animate height changes (off at high playback speeds) */
   animate: boolean;
   theme: string;
+  /** value and index labels (default on when they fit) */
+  labels?: boolean;
 }
 
 export function BarsView(props: BarsViewProps) {
   return props.frame.array.length > CANVAS_THRESHOLD ? <CanvasBars {...props} /> : <DomBars {...props} />;
 }
 
-function DomBars({ frame, maxValue, animate }: BarsViewProps) {
+function DomBars({ frame, maxValue, animate, labels = true }: BarsViewProps) {
   const n = frame.array.length;
   const states = barStates(frame);
-  const showValues = n <= 32;
-  const showIndices = n <= 40;
+  const showValues = labels && n <= 32;
+  const showIndices = labels && n <= 40;
   const gap = n <= 24 ? 'gap-1 sm:gap-1.5' : n <= 60 ? 'gap-[2px]' : 'gap-px';
   const range = frame.range;
   return (
