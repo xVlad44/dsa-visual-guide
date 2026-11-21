@@ -135,12 +135,14 @@ export function recordSudoku(givens: Board, limit = 60_000, maxSteps = 5_000_000
   const gen = solveSudoku(work);
   for (;;) {
     const step = gen.next();
+    // explicit casts: IteratorResult only narrows under strictNullChecks,
+    // and the app tsconfig compiles this file without it
     if (step.done) {
-      solved = step.value;
+      solved = step.value as boolean;
       break;
     }
     total++;
-    if (events.length < limit) events.push(step.value);
+    if (events.length < limit) events.push(step.value as SudokuEvent);
     if (total > maxSteps) {
       limitReached = true;
       break;

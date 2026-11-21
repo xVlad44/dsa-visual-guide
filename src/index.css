@@ -110,7 +110,6 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings: "ss01";
     text-rendering: optimizeLegibility;
   }
 
@@ -155,6 +154,54 @@
 
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* scrubber: thin track, gold progress, round thumb (WebKit + Firefox) */
+  .scrubber {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    --fill: 0%;
+  }
+  .scrubber::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 9999px;
+    background: linear-gradient(hsl(var(--primary)), hsl(var(--primary))) 0 / var(--fill) 100% no-repeat, hsl(var(--secondary));
+  }
+  .scrubber::-moz-range-track {
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--secondary));
+  }
+  .scrubber::-moz-range-progress {
+    height: 6px;
+    border-radius: 9999px;
+    background: hsl(var(--primary));
+  }
+  .scrubber::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    margin-top: -6px;
+    height: 18px;
+    width: 18px;
+    border-radius: 9999px;
+    border: 2px solid hsl(var(--primary));
+    background: hsl(var(--background));
+  }
+  .scrubber::-moz-range-thumb {
+    height: 14px;
+    width: 14px;
+    border-radius: 9999px;
+    border: 2px solid hsl(var(--primary));
+    background: hsl(var(--background));
+  }
+  .scrubber:focus-visible {
+    outline: none;
+  }
+  .scrubber:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
+  }
+  .scrubber:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
   }
 }
 
