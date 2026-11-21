@@ -79,6 +79,7 @@ export interface QueensFrame {
   solutions: number;
   placements: number;
   backtracks: number;
+  conflicts: number;
 }
 
 export function recordQueens(n: number, firstOnly = true): QueensFrame[] {
@@ -87,7 +88,8 @@ export function recordQueens(n: number, firstOnly = true): QueensFrame[] {
   let solutions = 0;
   let placements = 0;
   let backtracks = 0;
-  frames.push({ index: 0, event: null, cols: cols.slice(), cursor: null, blocker: null, solutions, placements, backtracks });
+  let conflicts = 0;
+  frames.push({ index: 0, event: null, cols: cols.slice(), cursor: null, blocker: null, solutions, placements, backtracks, conflicts });
   let k = 0;
   for (const e of nQueens(n, { firstOnly })) {
     k++;
@@ -100,6 +102,7 @@ export function recordQueens(n: number, firstOnly = true): QueensFrame[] {
       case 'conflict':
         cursor = { row: e.row, col: e.col };
         blocker = { row: e.withRow, col: e.withCol };
+        conflicts++;
         break;
       case 'place':
         cols = cols.slice();
@@ -117,7 +120,7 @@ export function recordQueens(n: number, firstOnly = true): QueensFrame[] {
         solutions++;
         break;
     }
-    frames.push({ index: k, event: e, cols, cursor, blocker, solutions, placements, backtracks });
+    frames.push({ index: k, event: e, cols, cursor, blocker, solutions, placements, backtracks, conflicts });
   }
   return frames;
 }
